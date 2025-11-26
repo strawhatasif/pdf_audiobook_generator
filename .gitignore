@@ -1,0 +1,42 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# IDE settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Output files (generated audiobooks)
+*.mp3
+*.wav
+*.zip
+audiobook_*/
+
+# Gradio cache
+flagged/
+.gradio/
+
+# Logs
+*.log
+
+# Test PDFs (optional - remove if you want to include samples)
+# *.pdf

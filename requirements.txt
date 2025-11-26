@@ -1,0 +1,13 @@
+# PDF to Audiobook Converter - Dependencies
+
+# Web interface
+gradio>=4.0.0
+
+# PDF text extraction
+pdfplumber>=0.10.0
+
+# Text-to-speech (Microsoft Edge TTS)
+edge-tts>=6.1.0
+
+# Required by pdfplumber
+Pillow>=10.0.0
