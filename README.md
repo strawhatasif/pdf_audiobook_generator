@@ -1,18 +1,17 @@
 # 📚 PDF to Audiobook Converter
 
-A web-based application that converts PDF documents into high-quality audiobooks using Microsoft Edge's text-to-speech technology.
+A web-based application that converts PDF documents into audiobooks using Google Text-to-Speech (gTTS).
 
 ![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 ## ✨ Features
 
-- **High-Quality Voices**: Natural-sounding narration using Microsoft Edge TTS (100+ voices available)
+- **Multiple Accents**: Choose from US, UK, Australian, Indian, Canadian English and other languages
 - **Automatic Chapter Detection**: Intelligently splits PDFs by chapter headings
-- **Multiple Voice Options**: Choose from US, UK, Australian, Indian English voices (male/female)
-- **Adjustable Speed**: Control playback speed from 0.5x to 2.0x
 - **Web Interface**: Clean, modern UI that runs locally in your browser
 - **Batch Download**: Download all chapters as a single ZIP file
+- **Reliable**: Uses Google's stable TTS service
 
 ## 🖥️ Screenshots
 
@@ -24,9 +23,9 @@ A web-based application that converts PDF documents into high-quality audiobooks
 │  ┌─────────────────────────┐   │  ┌─────────────────────┐   │
 │  │  📎 Drop PDF here       │   │  │ ✅ Chapter 1: Intro │   │
 │  └─────────────────────────┘   │  │ ✅ Chapter 2: ...   │   │
-│  🎙️ Voice: [en-US-Aria ▼]     │  │ ✅ Chapter 3: ...   │   │
-│  ⚡ Speed: [────●────] 1.0x   │  └─────────────────────┘   │
-│  [🎧 Generate Audiobook]       │  [📥 Download ZIP]         │
+│  🎙️ Voice: [English (US) ▼]   │  │ ✅ Chapter 3: ...   │   │
+│  [🎧 Convert to Audiobook]     │  └─────────────────────┘   │
+│                                │  [📥 Download ZIP]         │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -34,7 +33,7 @@ A web-based application that converts PDF documents into high-quality audiobooks
 
 ### Prerequisites
 
-- Python 3.9 or higher
+- **Python 3.10 - 3.12** (3.13+ not yet supported due to dependency compatibility)
 - Internet connection (required for text-to-speech)
 
 ### Installation
@@ -45,17 +44,38 @@ A web-based application that converts PDF documents into high-quality audiobooks
    cd pdf_audiobook_generator
    ```
 
-2. **Run the app** (handles setup automatically)
+2. **Create virtual environment and install dependencies**
    ```bash
-   ./run.sh
+   # Create venv
+   python -m venv venv
+   
+   # Activate (Windows GitBash)
+   source venv/Scripts/activate
+   
+   # Activate (macOS/Linux)
+   source venv/bin/activate
+   
+   # Install dependencies
+   pip install -r requirements.txt
    ```
 
-That's it! The script creates a virtual environment and installs dependencies on first run.
+3. **Run the app**
+   ```bash
+   python app.py
+   ```
+
+4. **Open your browser** to `http://127.0.0.1:7860`
 
 ### Usage
 
-#### Quick Start (Recommended)
-Simply run the included script - it handles everything automatically:
+1. Upload a PDF file
+2. Select a voice/accent from the dropdown
+3. Click "Convert to Audiobook"
+4. Download the ZIP file with all chapter audio files
+
+### Alternative: Using run.sh
+
+You can also use the included launch script:
 
 ```bash
 # GitBash (Windows), macOS, or Linux
@@ -65,45 +85,40 @@ Simply run the included script - it handles everything automatically:
 The script will:
 - Create a virtual environment (first run only)
 - Install all dependencies (first run only)
-- Launch the app and open your browser
+- Launch the app
 
-#### Manual Start
-If you prefer to run manually:
+## 🔧 Troubleshooting
 
+### Python version issues
+If you see errors about missing wheels or failed builds:
+- **Use Python 3.10, 3.11, or 3.12** (not 3.13 or 3.14)
+- Check version: `python --version`
+- Download Python 3.12: https://www.python.org/downloads/release/python-3129/
+
+### Gradio/localhost issues
+If you get errors about localhost not being accessible:
+- The app clears proxy settings automatically
+- If still failing, try: `app.launch(share=True)` in app.py
+
+### Pillow build errors
 ```bash
-# Activate virtual environment
-# Windows (GitBash):
-source venv/Scripts/activate
-# macOS/Linux:
-source venv/bin/activate
-
-# Run the app
-python app.py
+pip install --only-binary=:all: Pillow
 ```
-
-The app opens automatically at `http://127.0.0.1:7860`
-
-3. **Convert your PDF**
-   - Upload a PDF file
-   - Select a voice
-   - Adjust speed if desired
-   - Click "Generate Audiobook"
-   - Download the ZIP file with all chapters
 
 ## 🎙️ Available Voices
 
-| Voice | Gender | Accent |
-|-------|--------|--------|
-| en-US-AriaNeural | Female | American |
-| en-US-GuyNeural | Male | American |
-| en-US-JennyNeural | Female | American |
-| en-US-ChristopherNeural | Male | American |
-| en-GB-SoniaNeural | Female | British |
-| en-GB-RyanNeural | Male | British |
-| en-AU-NatashaNeural | Female | Australian |
-| en-AU-WilliamNeural | Male | Australian |
-| en-IN-NeerjaNeural | Female | Indian |
-| en-IN-PrabhatNeural | Male | Indian |
+| Voice | Language | Accent |
+|-------|----------|--------|
+| English (US) | English | American |
+| English (UK) | English | British |
+| English (Australia) | English | Australian |
+| English (India) | English | Indian |
+| English (Canada) | English | Canadian |
+| Spanish | Spanish | Standard |
+| French | French | Standard |
+| German | German | Standard |
+| Italian | Italian | Standard |
+| Portuguese | Portuguese | Standard |
 
 ## 📖 How Chapter Detection Works
 
@@ -122,14 +137,14 @@ For PDFs without clear chapter markers, the content is split into ~10-page segme
 You can modify the following in `app.py`:
 
 ```python
-# Add more voices to the dropdown
-POPULAR_VOICES = {
-    "Display Name": "voice-id",
+# Add more voices/languages
+VOICE_OPTIONS = {
+    "Display Name": {"lang": "en", "tld": "com"},
     ...
 }
 
 # Change pages per chapter for auto-splitting
-pages_per_chapter = 10  # in split_by_pages()
+pages_per_chunk = 10  # in detect_chapters()
 
 # Modify the server settings
 app.launch(
@@ -167,10 +182,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- [edge-tts](https://github.com/rany2/edge-tts) - Microsoft Edge TTS library
+- [gTTS](https://github.com/pndurette/gTTS) - Google Text-to-Speech library
 - [pdfplumber](https://github.com/jsvine/pdfplumber) - PDF text extraction
 - [Gradio](https://gradio.app/) - Web interface framework
 
 ## ⚠️ Disclaimer
 
-This tool uses Microsoft Edge's online text-to-speech service. Please review Microsoft's terms of service regarding usage. This project is intended for personal use.
+This tool uses Google's text-to-speech service. Please review Google's terms of service regarding usage. This project is intended for personal use.

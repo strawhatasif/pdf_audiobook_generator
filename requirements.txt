@@ -1,13 +1,17 @@
 # PDF to Audiobook Converter - Dependencies
+# Pinned versions for stability
 
-# Web interface
-gradio>=4.0.0
+# Web interface (4.19.2 works with localhost, newer versions have proxy issues)
+gradio==4.19.2
 
 # PDF text extraction
 pdfplumber>=0.10.0
 
-# Text-to-speech (Microsoft Edge TTS)
-edge-tts>=6.1.0
+# Text-to-speech (Google TTS - more reliable than Edge TTS)
+gTTS>=2.5.0
 
 # Required by pdfplumber
 Pillow>=10.0.0
+
+# Pinned for gradio compatibility
+huggingface_hub==0.26.2
